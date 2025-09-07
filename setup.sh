@@ -105,19 +105,19 @@ cp -f "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
 if [[ "$ENV" == "work" ]]; then
 	echo
 	info "Copying .zshrc to ~/"
-	cp -f "$CURRENT_DIR/$ENV/zshrc.work" "$HOME/.zshrc"
+	cp -f "$CONFIG_DIR/$ENV/zshrc.work" "$HOME/.zshrc"
 
 	echo
 	info "Copying .gitconfig to ~/"
-	cp -f "$CURRENT_DIR/$ENV/gitconfig.work" "$HOME/.gitconfig"
+	cp -f "$CONFIG_DIR/$ENV/gitconfig.work" "$HOME/.gitconfig"
 elif [[ "$ENV" == "personal" ]]; then
   	echo
 	info "Copying .zshrc to ~/"
-	cp -f "$CURRENT_DIR/base/zshrc" "$HOME/.zshrc"
+	cp -f "$CONFIG_DIR/configs/base/zshrc" "$HOME/.zshrc"
 
 	echo
 	info "Copying .gitconfig to ~/"
-	cp -f "$CURRENT_DIR/base/gitconfig" "$HOME/.gitconfig"
+	cp -f "$CONFIG_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
 fi
 
 # echo
