@@ -94,6 +94,7 @@ cp -f "$CURRENT_DIR/p10k.zsh" "$HOME/.p10k.zsh"
 
 echo
 info "tmux kube context"
+rm -rf "$HOME/.tmux"
 mkdir -p "$HOME/.tmux"
 git clone https://github.com/jonmosco/kube-tmux.git "$HOME/.tmux/kube-tmux"
 
