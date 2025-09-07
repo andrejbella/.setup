@@ -112,11 +112,11 @@ if [[ "$ENV" == "work" ]]; then
 elif [[ "$ENV" == "personal" ]]; then
   	echo
 	info "Copying .zshrc to ~/"
-	cp -f "$CURRENT_DIR/$ENV/zshrc.personal" "$HOME/.zshrc"
+	cp -f "$CURRENT_DIR/base/zshrc" "$HOME/.zshrc"
 
 	echo
 	info "Copying .gitconfig to ~/"
-	cp -f "$CURRENT_DIR/$ENV/gitconfig.personal" "$HOME/.gitconfig"
+	cp -f "$CURRENT_DIR/base/gitconfig" "$HOME/.gitconfig"
 fi
 
 # echo
