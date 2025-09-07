@@ -6,6 +6,8 @@ elif [[ "$SETUP" == "personal" ]]; then
   source ~/.setup/configs/personal/zshrc.personal
 fi
 
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.setup/:$HOME/.setup/configs/personal:$HOME/.setup/configs/work:$PATH"
+
 source $HOME/.keychain/$(hostname)-sh
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -102,8 +104,6 @@ source <(clusterctl completion zsh)
 # Completions for k as kubecolor
 compdef kubecolor=kubectl
 compdef k=kubectl
-
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.setup/:$PATH"
 
 export KUBECONFIG=$(grep -rl '^kind: Config' ${HOME}/.kube/config ${HOME}/.kube/my_configs/ | tr '\n' ':')
 
