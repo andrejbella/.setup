@@ -3,7 +3,7 @@ SETUP=$(cat ~/.setup/.setup_env 2>/dev/null || echo "personal")
 if [[ "$SETUP" == "work" ]]; then
   source ~/.setup/configs/work/zshrc.work
 elif [[ "$SETUP" == "personal" ]]; then
-  source ~/.setup/configs/personal/zshrc.personal
+  source ~/.setup/configs/base/zshrc
 fi
 
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.setup/:$HOME/.setup/configs/personal:$HOME/.setup/configs/work:$PATH"
