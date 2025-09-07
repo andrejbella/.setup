@@ -1,0 +1,111 @@
+SETUP=$(cat ~/.setup/.setup_env 2>/dev/null || echo "personal")
+
+if [[ "$SETUP" == "work" ]]; then
+  source ~/.setup/configs/work/zshrc.work
+elif [[ "$SETUP" == "personal" ]]; then
+  source ~/.setup/configs/personal/zshrc.personal
+fi
+
+source $HOME/.keychain/$(hostname)-sh
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+ZINIT_HOME="${XDG_CACHE_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+ZINIT_PLUGINS="${XDG_CACHE_HOME:-${HOME}/.local/share}/zinit/plugins"
+FZF_HOME="${HOME}/.fzf}"
+
+if [ ! -d "$ZINIT_HOME" ]; then
+  mkdir -p "$(dirname $ZINIT_HOME)"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Add zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+zinit light asdf-vm/asdf
+
+source "$ZINIT_PLUGINS"/Aloxaf---fzf-tab/fzf-tab.plugin.zsh
+source "$ZINIT_PLUGINS"/asdf-vm---asdf/asdf.sh
+source "$ZINIT_PLUGINS"/asdf-vm---asdf/internal/completions/asdf.zsh
+
+
+# Use arrow keys to cycle through autosuggestions history
+bindkey "^[[1;5A" history-beginning-search-backward
+bindkey "^[[1;5B" history-beginning-search-forward
+
+
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+unsetopt beep
+
+# Completions case insensitive
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:*' fzf-preview 'ls --color $realpath'
+zstyle ':completion:*' completer _complete _ignored _approximate
+zstyle ':completion:*' complete true
+
+alias cd="z"
+alias l="eza"
+alias ls="eza"
+alias lt="eza --tree --level"
+alias ll="ls -la"
+alias hs="history | grep -i"
+alias mi=micro
+
+alias k=kubecolor
+alias kgp="kubecolor get pods -A"
+alias t=talosctl
+alias k9=k9s
+alias kc=kubectx
+alias kn=kubens
+alias tf=terraform
+
+alias gs="git status"
+alias gc="git commit"
+alias ga="git add"
+alias gp="git push"
+
+alias awsp='export AWS_PROFILE=$(sed -n "s/\[profile \(.*\)\]/\1/gp" ~/.aws/config | fzf)'
+alias azp='export AZURE_SUBSCRIPTION_ID=$(az account list --output json | jq -r ".[] | \"\(.name) (\(.id))\"" | fzf --height 40% --reverse | sed -n "s/.*(\(.*\)).*/\1/p")'
+
+# Load completions
+autoload -U compinit; compinit
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(zoxide init zsh)"
+eval "$(fzf --zsh)"
+source <(kubectl completion zsh)
+source <(kubecolor completion zsh)
+source <(flux completion zsh)
+source <(clusterctl completion zsh)
+
+# Completions for k as kubecolor
+compdef kubecolor=kubectl
+compdef k=kubectl
+
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.setup/:$PATH"
+
+export KUBECONFIG=$(grep -rl '^kind: Config' ${HOME}/.kube/config ${HOME}/.kube/my_configs/ | tr '\n' ':')
+
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Check if we're in a tmux session
+if [ -n "$TMUX" ]; then
+  # We're inside tmux - detach first
+  tmux detach
+fi
+
+# Kill all tmux sessions (if any exist)
+tmux kill-server 2>/dev/null || true
+
+if [ $1 == 'a' ]; then
+    pids=$(ps -ef | grep '[s]sh' | grep -v 'ssh-agent' | awk '{print $2}')
+    if [[ -n "$pids" ]]; then
+        echo "Killing SSH processes: $pids"
+        echo "$pids" | xargs kill
+    fi
+    proxy_setup
+    hproxy 2
+fi
+
+# Start a new tmux session (detached)
+tmux new-session -d 
+
+# Create a new window
+tmux new-window 
+
+# Split the window horizontally
+tmux split-window -v
+
+# Run k9s in the upper pane (first pane, index 0)
+tmux send-keys -t 1 'k9s' C-m
+
+# Attach to the tmux session
+tmux attach
