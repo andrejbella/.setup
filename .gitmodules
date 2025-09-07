@@ -1,0 +1,6 @@
+[submodule "netflix"]
+	path = configs/personal
+	url = git@github.com:andrejbella/config-personal.git
+[submodule "personal"]
+	path = configs/work
+	url = git@github.com:andrejbella/config-work.git
