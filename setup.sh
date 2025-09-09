@@ -4,7 +4,14 @@ CURRENT_DIR="$(dirname "$0")"
 ZINIT_HOME="${XDG_CACHE_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 FZF_HOME="${HOME}/.fzf"
 
-CONFIG_DIR="$HOME/.setup"
+# Prefer ~/projects if it exists, otherwise fallback to $HOME
+if [ -d "$HOME/projects" ]; then
+    PROJECTS_DIR="$HOME/projects"
+else
+    PROJECTS_DIR="$HOME"
+fi
+
+CONFIG_DIR="$PROJECTS_DIR/.setup"
 ENV_FILE="$CONFIG_DIR/.setup_env"
 
 info()
