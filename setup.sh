@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-CURRENT_DIR="$(dirname "$0")"
+CURRENT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+echo $CURRENT_DIR
 ZINIT_HOME="${XDG_CACHE_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 FZF_HOME="${HOME}/.fzf"
 
@@ -11,8 +13,7 @@ else
     PROJECTS_DIR="$HOME"
 fi
 
-CONFIG_DIR="$PROJECTS_DIR/.setup"
-ENV_FILE="$CONFIG_DIR/.setup_env"
+ENV_FILE="$CURRENT_DIR/.setup_env"
 
 info()
 {
@@ -106,39 +107,37 @@ mkdir -p "$HOME/.tmux"
 git clone https://github.com/jonmosco/kube-tmux.git "$HOME/.tmux/kube-tmux"
 
 echo
+info "Adding setup exports to zshrc"
+sed -i "1iexport SETUP_DIR=\"$CURRENT_DIR\"" "$CURRENT_DIR/configs/base/zshrc"
+sed -i "1iexport ENV=\"$ENV\"" "$CURRENT_DIR/configs/base/zshrc"
+
+echo
 info "Copying .tmux.conf to ~/"
-cp -f "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
+cp -rf "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
 
-if [[ "$ENV" == "work" ]]; then
-	echo
-	info "Copying .zshrc to ~/"
-	cp -f "$CONFIG_DIR/$ENV/zshrc.work" "$HOME/.zshrc"
+echo
+info "Copying .gitconfig to ~/"
+cp -rf "$CURRENT_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
 
-	echo
-	info "Copying .gitconfig to ~/"
-	cp -f "$CONFIG_DIR/$ENV/gitconfig.work" "$HOME/.gitconfig"
-elif [[ "$ENV" == "personal" ]]; then
-  	echo
-	info "Copying .zshrc to ~/"
-	cp -f "$CONFIG_DIR/configs/base/zshrc" "$HOME/.zshrc"
+echo
+info "Copying .zshrc to ~/"
+cp -rf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
 
-	echo
-	info "Copying .gitconfig to ~/"
-	cp -f "$CONFIG_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
-fi
+echo
+info "Installing krew"
 
-# echo
-# info "Installing krew"
-# 
-# (
-#   set -x; cd "$(mktemp -d)" &&
-#   OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-#   ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-#   KREW="krew-${OS}_${ARCH}" &&
-#   curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
-#   tar zxvf "${KREW}.tar.gz" &&
-#   ./"${KREW}" install krew
-# )
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+
+info "custom kubeconfigs dir"
+mkdir -p "$HOME/.kube/my_configs"
 
 echo
 info "Installing azure-cli"
