@@ -88,7 +88,8 @@ info "Installing brew tools"
 	asdf \
 	clusterawsadm \
 	kubelogin \
-	yq
+	yq \
+	kustomize
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
