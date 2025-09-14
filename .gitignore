@@ -1,3 +1,4 @@
 themes/
 .setup_env
 configs/base/zshrc-in-use
+.tool-versions
