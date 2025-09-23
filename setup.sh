@@ -76,12 +76,11 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 /home/linuxbrew/.linuxbrew/bin/brew analytics off
 
 info "Installing brew tools"
-/home/linuxbrew/.linuxbrew/bin/brew tap hashicorp/tap
 /home/linuxbrew/.linuxbrew/bin/brew install \
 	talosctl \
 	fzf \
 	derailed/k9s/k9s \
-	hashicorp/tap/terraform \
+	opentofu \
 	fluxcd/tap/flux \
 	kubecolor \
 	kubectx \
@@ -89,7 +88,8 @@ info "Installing brew tools"
 	clusterawsadm \
 	kubelogin \
 	yq \
-	kustomize
+	kustomize \
+	stern
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
