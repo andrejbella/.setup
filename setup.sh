@@ -62,6 +62,7 @@ sudo apt update -y && sudo apt install \
 	build-essential \
 	dnsutils \
 	etcd-client \
+	age \
 	-y
 
 echo
@@ -89,7 +90,9 @@ info "Installing brew tools"
 	kubelogin \
 	yq \
 	kustomize \
-	stern
+	stern \
+	sops \
+	trufflehog
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
