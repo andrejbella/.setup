@@ -91,6 +91,7 @@ autoload -U compinit; compinit
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
+eval "$(atuin init zsh)"
 source <(kubectl completion zsh)
 source <(kubecolor completion zsh)
 source <(flux completion zsh)

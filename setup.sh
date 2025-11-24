@@ -92,7 +92,8 @@ info "Installing brew tools"
 	kustomize \
 	stern \
 	sops \
-	trufflehog
+	trufflehog \
+	atuin
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
