@@ -93,6 +93,7 @@ info "Installing brew tools"
 	stern \
 	sops \
 	trufflehog \
+	Azure/azure-workload-identity/azwi \
 	atuin
 
 ###P10K###
