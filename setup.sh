@@ -94,7 +94,9 @@ info "Installing brew tools"
 	sops \
 	trufflehog \
 	Azure/azure-workload-identity/azwi \
-	atuin
+	atuin \
+	kcl-lang/tap/kcl \
+	go-task/tap/go-task
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
