@@ -115,12 +115,6 @@ mkdir -p "$HOME/.tmux"
 git clone https://github.com/jonmosco/kube-tmux.git "$HOME/.tmux/kube-tmux"
 
 echo
-info "Adding setup exports to zshrc"
-cp -rf "$CURRENT_DIR/configs/base/zshrc" "$CURRENT_DIR/configs/base/zshrc-in-use"
-sed -i "1iexport SETUP_DIR=\"$CURRENT_DIR\"" "$CURRENT_DIR/configs/base/zshrc-in-use"
-sed -i "1iexport ENV=\"$ENV\"" "$CURRENT_DIR/configs/base/zshrc-in-use"
-
-echo
 info "Copying .tmux.conf to ~/"
 cp -rf "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
 
@@ -129,8 +123,9 @@ info "Copying .gitconfig to ~/"
 cp -rf "$CURRENT_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
 
 echo
-info "Copying .zshrc to ~/"
-cp -rf "$CURRENT_DIR/configs/base/zshrc-in-use" "$HOME/.zshrc"
+info "Symlinking .zshrc to ~/"
+rm -f "$HOME/.zshrc"
+ln -s "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
 
 echo
 info "Installing krew"

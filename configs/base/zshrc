@@ -1,5 +1,17 @@
 source $HOME/.keychain/$(hostname)-sh
 
+if [[ -L "$HOME/.zshrc" ]]; then
+  export SETUP_DIR="$(cd "$(dirname "$(readlink -f "$HOME/.zshrc")")" && cd ../.. && pwd)"
+else
+  export SETUP_DIR="$HOME/projects/.setup"
+fi
+
+if [[ -f "$SETUP_DIR/.setup_env" ]]; then
+  export ENV="$(cat "$SETUP_DIR/.setup_env")"
+else
+  export ENV="personal"
+fi
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -26,8 +38,8 @@ zinit light Aloxaf/fzf-tab
 zinit light asdf-vm/asdf
 
 source "$ZINIT_PLUGINS"/Aloxaf---fzf-tab/fzf-tab.plugin.zsh
-source "$ZINIT_PLUGINS"/asdf-vm---asdf/asdf.sh
-source "$ZINIT_PLUGINS"/asdf-vm---asdf/internal/completions/asdf.zsh
+source "$ZINIT_PLUGINS"/asdf-vm---asdf/asdf.sh &>/dev/null
+source "$ZINIT_PLUGINS"/asdf-vm---asdf/internal/completions/asdf.zsh &>/dev/null
 
 
 # Use arrow keys to cycle through autosuggestions history
