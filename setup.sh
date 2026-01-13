@@ -94,7 +94,6 @@ info "Installing brew tools"
 	sops \
 	trufflehog \
 	Azure/azure-workload-identity/azwi \
-	atuin \
 	kcl-lang/tap/kcl \
 	go-task/tap/go-task
 

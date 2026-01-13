@@ -83,14 +83,35 @@ alias k9=k9s
 alias kc=kubectx
 alias kn=kubens
 alias tf=terraform
+alias f=flux
 
 alias gs="git status"
 alias gc="git commit"
 alias ga="git add"
 alias gp="git push"
 
-alias awsp='export AWS_PROFILE=$(sed -n "s/\[profile \(.*\)\]/\1/gp" ~/.aws/config | fzf)'
-alias azp='export AZURE_SUBSCRIPTION_ID=$(az account list --output json | jq -r ".[] | \"\(.name) (\(.id))\"" | fzf --height 40% --reverse | sed -n "s/.*(\(.*\)).*/\1/p")'
+awsp() {
+  local profile
+  profile=$(sed -n 's/\[profile \(.*\)\]/\1/gp' ~/.aws/config | fzf)
+  if [[ -n "$profile" ]]; then
+    export AWS_PROFILE="$profile"
+    echo "Switched to AWS profile: $AWS_PROFILE"
+  fi
+}
+
+azp() {
+  local selection sub_id
+  selection=$(az account list --output json | jq -r '.[] | "\(.name) (\(.id))"' | fzf --height 40% --reverse)
+  if [[ -n "$selection" ]]; then
+    sub_id=$(echo "$selection" | sed -n 's/.*(\(.*\)).*/\1/p')
+    if az account set --subscription "$sub_id"; then
+      export AZURE_SUBSCRIPTION_ID="$sub_id"
+      echo "Switched to: $(az account show --query name -o tsv)"
+    else
+      echo "Failed to switch subscription"
+    fi
+  fi
+}
 
 # Load completions
 autoload -U compinit; compinit
@@ -98,7 +119,6 @@ autoload -U compinit; compinit
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
-eval "$(atuin init zsh)"
 source <(kubectl completion zsh)
 source <(kubecolor completion zsh)
 source <(flux completion zsh)
@@ -107,6 +127,8 @@ source <(clusterctl completion zsh)
 # Completions for k as kubecolor
 compdef kubecolor=kubectl
 compdef k=kubectl
+
+export EDITOR=micro
 
 #export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$SETUP_DIR/:$SETUP_DIR/configs/$ENV:$PATH"
 
