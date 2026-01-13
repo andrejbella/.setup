@@ -130,9 +130,9 @@ compdef k=kubectl
 
 export EDITOR=micro
 
-#export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:${KREW_ROOT:-$HOME/.krew}/bin:$SETUP_DIR/:$SETUP_DIR/configs/$ENV:$PATH"
-
+# this is my default, will be overridden by work zshrc
 export KUBECONFIG=$(grep -rl '^kind: Config' ${HOME}/.kube/config ${HOME}/.kube/my_configs/ | tr '\n' ':')
+
 source "$SETUP_DIR/configs/$ENV/zshrc"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
