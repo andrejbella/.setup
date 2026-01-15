@@ -95,7 +95,8 @@ info "Installing brew tools"
 	trufflehog \
 	Azure/azure-workload-identity/azwi \
 	kcl-lang/tap/kcl \
-	go-task/tap/go-task
+	go-task/tap/go-task \
+	step
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
@@ -118,13 +119,13 @@ info "Copying .tmux.conf to ~/"
 cp -rf "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
 
 echo
-info "Copying .gitconfig to ~/"
-cp -rf "$CURRENT_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
+info "Symlinking config files"
+ENV=$(cat "$ENV_FILE")
+ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 
-echo
-info "Symlinking .zshrc to ~/"
-rm -f "$HOME/.zshrc"
-ln -s "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
+rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
+ln -sf "$ENV_CONFIG_DIR/zshrc" "$HOME/.zshrc"
+ln -sf "$ENV_CONFIG_DIR/gitconfig" "$HOME/.gitconfig"
 
 echo
 info "Installing krew"
