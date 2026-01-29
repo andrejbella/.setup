@@ -1,0 +1,22 @@
+[push]
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[core]
+	editor = micro
+[alias]
+	# Switch git profile by re-linking gitconfig-profile
+	personal = !ln -sf \"$SETUP_DIR/configs/personal/gitconfig-profile\" \"$HOME/.gitconfig-profile\" && echo \"Switched to profile: personal\" && git whoami
+	work = !ln -sf \"$SETUP_DIR/configs/work/gitconfig-profile\" \"$HOME/.gitconfig-profile\" && echo \"Switched to profile: work\" && git whoami
+	# Show current git identity
+	whoami = !echo \"$(git config user.name) <$(git config user.email)>\"
+
+# Include profile-specific config (user, http settings, etc.)
+# This symlink is managed and points to either personal/gitconfig-profile or work/gitconfig-profile
+[include]
+	path = ~/.gitconfig-profile

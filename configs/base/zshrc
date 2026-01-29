@@ -48,8 +48,8 @@ bindkey "^[[1;5B" history-beginning-search-forward
 
 
 HISTFILE=~/.zsh_history
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=1000000
+SAVEHIST=1000000
 HISTDUP=erase
 setopt appendhistory
 setopt sharehistory
@@ -129,6 +129,10 @@ compdef kubecolor=kubectl
 compdef k=kubectl
 
 export EDITOR=micro
+
+# Link gitconfig and profile-specific gitconfig
+ln -sf "$SETUP_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
+ln -sf "$SETUP_DIR/configs/$ENV/gitconfig-profile" "$HOME/.gitconfig-profile"
 
 # this is my default, will be overridden by work zshrc
 export KUBECONFIG=$(grep -rl '^kind: Config' ${HOME}/.kube/config ${HOME}/.kube/my_configs/ | tr '\n' ':')
