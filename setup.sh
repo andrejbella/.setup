@@ -124,7 +124,7 @@ ENV=$(cat "$ENV_FILE")
 ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 
 rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
-ln -sf "$ENV_CONFIG_DIR/zshrc" "$HOME/.zshrc"
+ln -sf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
 ln -sf "$ENV_CONFIG_DIR/gitconfig" "$HOME/.gitconfig"
 
 echo

@@ -89,6 +89,7 @@ alias gs="git status"
 alias gc="git commit"
 alias ga="git add"
 alias gp="git push"
+alias gdf="git diff"
 
 awsp() {
   local profile
