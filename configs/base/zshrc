@@ -84,6 +84,7 @@ alias kc=kubectx
 alias kn=kubens
 alias tf=terraform
 alias f=flux
+alias c=clusterctl
 
 alias gs="git status"
 alias gc="git commit"
