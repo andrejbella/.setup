@@ -47,22 +47,14 @@ sudo apt update -y && sudo apt install \
 	zsh \
 	git \
 	curl \
-	zoxide \
-	btop \
-	eza \
 	micro \
 	gcc \
-	jq \
-	jwt \
 	tcpdump \
 	net-tools \
 	wslu \
-	tmux \
 	keychain \
 	build-essential \
 	dnsutils \
-	etcd-client \
-	age \
 	-y
 
 echo
@@ -78,14 +70,28 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 
 info "Installing brew tools"
 /home/linuxbrew/.linuxbrew/bin/brew install \
+	mise \
+	Azure/azure-workload-identity/azwi \
+	dgunzy/tap/flux9s \
+	pipx
+
+echo
+info "exporting github token for authenticated mise requests"
+export GITHUB_TOKEN=$(cat ~/flux-github-token)
+info "Installing mise tools"
+mise use --global \
+	clusterctl \
+	kubectl \
+	awscli \
+	helm \
+	kubectx \
+	kubens \
+	kubecolor \
 	talosctl \
 	fzf \
-	derailed/k9s/k9s \
+	k9s \
 	opentofu \
-	fluxcd/tap/flux \
-	kubecolor \
-	kubectx \
-	asdf \
+	flux2 \
 	clusterawsadm \
 	kubelogin \
 	yq \
@@ -93,10 +99,21 @@ info "Installing brew tools"
 	stern \
 	sops \
 	trufflehog \
-	Azure/azure-workload-identity/azwi \
-	kcl-lang/tap/kcl \
-	go-task/tap/go-task \
-	step
+	kcl \
+	task \
+	fd \
+	ripgrep \
+	azure-cli \
+	krew \
+	zoxide \
+	btop \
+	eza \
+	jq \
+	jwt \
+	age \
+	etcd \
+	tmux \
+	claude
 
 ###P10K###
 P10K_DIR="$CURRENT_DIR/powerlevel10k"
@@ -115,10 +132,6 @@ mkdir -p "$HOME/.tmux"
 git clone https://github.com/jonmosco/kube-tmux.git "$HOME/.tmux/kube-tmux"
 
 echo
-info "Copying .tmux.conf to ~/"
-cp -rf "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
-
-echo
 info "Symlinking config files"
 ENV=$(cat "$ENV_FILE")
 ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
@@ -126,32 +139,19 @@ ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
 ln -sf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
 ln -sf "$ENV_CONFIG_DIR/gitconfig" "$HOME/.gitconfig"
+ln -sf "$CURRENT_DIR/k9s/config.yaml" "$HOME/.config/k9s/config.yaml"
+ln -sf "$CURRENT_DIR/tmux.conf" "$HOME/.tmux.conf"
+ln -sf "$CURRENT_DIR/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
+ln -sf "$CURRENT_DIR/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 
 echo
-info "Installing krew"
-
-(
-  set -x; cd "$(mktemp -d)" &&
-  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
-  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
-  KREW="krew-${OS}_${ARCH}" &&
-  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
-  tar zxvf "${KREW}.tar.gz" &&
-  ./"${KREW}" install krew
-)
+info "Downloading visuals"
+info "k9s"
+mkdir -p "$CURRENT_DIR/skins/k9s"
+curl -L https://github.com/catppuccin/k9s/archive/main.tar.gz | tar xz -C "$CURRENT_DIR/skins/k9s" --strip-components=2 k9s-main/dist
 
 info "custom kubeconfigs dir"
 mkdir -p "$HOME/.kube/my_configs"
-
-echo
-info "Installing azure-cli"
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-
-echo
-info "Installing asdf plugins"
-asdf plugin add kubectl https://github.com/asdf-community/asdf-kubectl.git
-asdf plugin add clusterctl https://github.com/pfnet-research/asdf-clusterctl.git
-asdf plugin add awscli https://github.com/MetricMike/asdf-awscli.git
 
 echo
 info """
@@ -160,6 +160,7 @@ Install the JetBrains Mono Nerd font at https://www.nerdfonts.com/font-downloads
 Change the wsl theme from wsl.conf
 Apply shortcuts from wsl.conf
 """
-
-chsh -s $(which zsh)
+if [ "$SHELL" != "/usr/bin/zsh" ];then
+	chsh -s $(which zsh)
+fi
 

@@ -12,6 +12,7 @@ else
   export ENV="personal"
 fi
 
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -35,11 +36,7 @@ zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
-zinit light asdf-vm/asdf
-
 source "$ZINIT_PLUGINS"/Aloxaf---fzf-tab/fzf-tab.plugin.zsh
-source "$ZINIT_PLUGINS"/asdf-vm---asdf/asdf.sh &>/dev/null
-source "$ZINIT_PLUGINS"/asdf-vm---asdf/internal/completions/asdf.zsh &>/dev/null
 
 
 # Use arrow keys to cycle through autosuggestions history
@@ -125,6 +122,7 @@ source <(kubectl completion zsh)
 source <(kubecolor completion zsh)
 source <(flux completion zsh)
 source <(clusterctl completion zsh)
+eval "$(mise activate zsh)"
 
 # Completions for k as kubecolor
 compdef kubecolor=kubectl
