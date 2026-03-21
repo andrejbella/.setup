@@ -1,0 +1,1 @@
+These are symlinked from their default location in ~/.config/k9s/
