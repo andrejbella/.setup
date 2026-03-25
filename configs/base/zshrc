@@ -82,6 +82,8 @@ alias kn=kubens
 alias tf=terraform
 alias f=flux
 alias c=clusterctl
+alias f9=flux9s
+alias mu="mise use --global"
 
 alias gs="git status"
 alias gc="git commit"
