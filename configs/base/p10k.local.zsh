@@ -41,7 +41,7 @@
   )
 
   # --- kubecontext icon override ---
-  typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=2
+  typeset -g POWERLEVEL9K_KUBECONTEXT_DEFAULT_FOREGROUND=4
 
 
   (( ! $+functions[p10k] )) || p10k reload

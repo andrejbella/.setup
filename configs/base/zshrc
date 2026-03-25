@@ -79,6 +79,7 @@ alias kgp="kubecolor get pods -A"
 alias k9=k9s
 alias kc=kubectx
 alias kn=kubens
+alias h=helm
 alias tf=terraform
 alias f=flux
 alias c=clusterctl
