@@ -75,7 +75,7 @@ alias mi=micro
 
 alias k=kubecolor
 alias kgp="kubecolor get pods -A"
-alias t=talosctl
+#alias t=talosctl
 alias k9=k9s
 alias kc=kubectx
 alias kn=kubens
@@ -89,12 +89,23 @@ alias ga="git add"
 alias gp="git push"
 alias gdf="git diff"
 
+export "MICRO_TRUECOLOR=1"
+
 awsp() {
   local profile
   profile=$(sed -n 's/\[profile \(.*\)\]/\1/gp' ~/.aws/config | fzf)
   if [[ -n "$profile" ]]; then
     export AWS_PROFILE="$profile"
     echo "Switched to AWS profile: $AWS_PROFILE"
+  fi
+}
+
+awsr() {
+  local region
+  region=$(aws ec2 describe-regions --query 'Regions[].RegionName' --output text | tr '\t' '\n' | sort | fzf)
+  if [[ -n "$region" ]]; then
+    export AWS_DEFAULT_REGION="$region"
+    echo "Switched to AWS region: $AWS_DEFAULT_REGION"
   fi
 }
 
@@ -112,17 +123,37 @@ azp() {
   fi
 }
 
+azr() {
+  local location
+  location=$(az account list-locations --query '[].name' -o tsv | sort | fzf)
+  if [[ -n "$location" ]]; then
+    az configure --defaults location="$location"
+    echo "Switched to Azure region: $location"
+  fi
+}
+
 # Load completions
-autoload -U compinit; compinit
+autoload bashcompinit && bashcompinit
+autoload -Uz compinit && compinit
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(mise activate zsh)"
 eval "$(zoxide init zsh)"
 eval "$(fzf --zsh)"
 source <(kubectl completion zsh)
 source <(kubecolor completion zsh)
 source <(flux completion zsh)
 source <(clusterctl completion zsh)
-eval "$(mise activate zsh)"
+
+# AWS CLI completion (bash completion loaded via bashcompinit)
+if command -v aws_completer >/dev/null 2>&1; then
+  complete -C aws_completer aws
+fi
+
+# Azure CLI completion (bash script loaded in zsh via bashcompinit)
+if [[ -r /etc/bash_completion.d/azure-cli ]]; then
+  source /etc/bash_completion.d/azure-cli
+fi
 
 # Completions for k as kubecolor
 compdef kubecolor=kubectl
@@ -140,3 +171,4 @@ export KUBECONFIG=$(grep -rl '^kind: Config' ${HOME}/.kube/config ${HOME}/.kube/
 source "$SETUP_DIR/configs/$ENV/zshrc"
 
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f "$SETUP_DIR/configs/base/p10k.local.zsh" ]] || source "$SETUP_DIR/configs/base/p10k.local.zsh"
