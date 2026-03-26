@@ -144,25 +144,7 @@ ln -sf "$CURRENT_DIR/configs/base/tmux.conf" "$HOME/.tmux.conf"
 ln -sf "$CURRENT_DIR/configs/base/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
 ln -sf "$CURRENT_DIR/configs/base/k9s/aliases.yaml" "$HOME/.config/k9s/aliases.yaml"
 ln -sf "$CURRENT_DIR/configs/base/micro/settings.json" "$HOME/.config/micro/settings.json"
-
-echo
-info "Downloading visuals"
-info "k9s"
-mkdir -p "$CURRENT_DIR/skins/k9s"
-curl -L https://github.com/catppuccin/k9s/archive/main.tar.gz | tar xz -C "$CURRENT_DIR/skins/k9s" --strip-components=2 k9s-main/dist
-mkdir -p "$HOME/.config/k9s"
-if [ -d "$HOME/.config/k9s/skins" ] && [ ! -L "$HOME/.config/k9s/skins" ]; then
-	mv "$HOME/.config/k9s/skins" "$HOME/.config/k9s/skins.bak"
-fi
 ln -sfn "$CURRENT_DIR/skins/k9s" "$HOME/.config/k9s/skins"
-
-info "micro"
-mkdir -p "$CURRENT_DIR/skins/micro"
-curl -L https://github.com/catppuccin/micro/archive/main.tar.gz | tar xz -C "$CURRENT_DIR/skins/micro" --strip-components=2 micro-main/themes
-mkdir -p "$HOME/.config/micro"
-if [ -d "$HOME/.config/micro/colorschemes" ] && [ ! -L "$HOME/.config/micro/colorschemes" ]; then
-	mv "$HOME/.config/micro/colorschemes" "$HOME/.config/micro/colorschemes.bak"
-fi
 ln -sfn "$CURRENT_DIR/skins/micro" "$HOME/.config/micro/colorschemes"
 
 info "custom kubeconfigs dir"
