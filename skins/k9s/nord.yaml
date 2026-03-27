@@ -31,7 +31,7 @@ k9s:
   # ClusterInfoView styles.
   info:
     fgColor: *blue
-    sectionColor: *foreground
+    sectionColor: *orange
   # Dialog styles.
   dialog:
     fgColor: *foreground
@@ -59,7 +59,7 @@ k9s:
       activeColor: *current_line
     # Resource status and update styles
     status:
-      newColor: *blue
+      newColor: *cyan
       modifyColor: *magenta
       addColor: *green
       errorColor: *red
