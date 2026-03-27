@@ -1,0 +1,16 @@
+{
+  "name": "gruvbox-custom",
+  "displayName": "Gruvbox Custom",
+  "version": "1.0.0",
+  "engines": { "vscode": "^1.60.0" },
+  "categories": ["Themes"],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Gruvbox Dark Medium (Custom)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/gruvbox-dark-medium.json"
+      }
+    ]
+  }
+}
