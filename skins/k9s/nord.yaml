@@ -25,7 +25,7 @@ k9s:
     logoColor: *yellow
   # Command prompt styles
   prompt:
-    fgColor: *foreground
+    fgColor: *blue
     bgColor: *background
     suggestColor: *orange
   # ClusterInfoView styles.
@@ -54,7 +54,7 @@ k9s:
       numKeyColor: *blue
     # CrumbView attributes for history navigation.
     crumbs:
-      fgColor: *foreground
+      fgColor: *cyan
       bgColor: *current_line
       activeColor: *current_line
     # Resource status and update styles
