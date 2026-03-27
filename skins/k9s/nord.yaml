@@ -45,7 +45,7 @@ k9s:
   frame:
     # Borders styles.
     border:
-      fgColor: *selection
+      fgColor: *cyan
       focusColor: *current_line
     menu:
       fgColor: *foreground
@@ -85,7 +85,7 @@ k9s:
         - *red
     # TableView attributes.
     table:
-      fgColor: *foreground
+      fgColor: *cyan
       bgColor: default
       # Header row styles.
       header:
@@ -103,14 +103,14 @@ k9s:
     yaml:
       keyColor: *blue
       colonColor: *magenta
-      valueColor: *foreground
+      valueColor: *cyan
     # Logs styles.
     logs:
-      fgColor: *foreground
+      fgColor: *cyan
       bgColor: default
       indicator:
-        fgColor: *foreground
-        bgColor: *magenta
+        fgColor: *cyan
+        bgColor: *background
         toggleOnColor: *magenta
         toggleOffColor: *blue
     help:
