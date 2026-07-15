@@ -69,11 +69,16 @@ NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Ho
 /home/linuxbrew/.linuxbrew/bin/brew analytics off
 
 info "Installing brew tools"
+/home/linuxbrew/.linuxbrew/bin/brew tap \
+	robusta-dev/homebrew-holmesgpt
+
 /home/linuxbrew/.linuxbrew/bin/brew install \
 	mise \
 	Azure/azure-workload-identity/azwi \
 	dgunzy/tap/flux9s \
 	pipx
+	kcl-lang/tap/kcl-lsp \
+	holmesgpt \
 
 echo
 info "exporting github token for authenticated mise requests"
