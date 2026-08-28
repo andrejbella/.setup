@@ -107,7 +107,12 @@ install_system_tools()
 				tcpdump \
 				keychain \
 				bind \
-				inetutils
+				inetutils \
+				ghostty \
+				maccy \
+				raycast \
+				dockdoor \
+				scroll-reverser
 			;;
 	esac
 }
@@ -229,7 +234,7 @@ symlink_configs()
 	ENV="$(cat "$ENV_FILE")"
 	ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 
-	mkdir -p "$HOME/.config/k9s" "$HOME/.config/micro" "$HOME/.kube/my_configs"
+	mkdir -p "$HOME/.config/k9s" "$HOME/.config/micro" "$HOME/.kube/my_configs" "$HOME/.config/ghostty"
 	rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
 	ln -sf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
 	ln -sf "$ENV_CONFIG_DIR/gitconfig" "$HOME/.gitconfig"
@@ -240,6 +245,7 @@ symlink_configs()
 	ln -sf "$CURRENT_DIR/configs/base/micro/settings.json" "$HOME/.config/micro/settings.json"
 	ln -sfn "$CURRENT_DIR/skins/k9s" "$HOME/.config/k9s/skins"
 	ln -sfn "$CURRENT_DIR/skins/micro" "$HOME/.config/micro/colorschemes"
+	ln -sf "$CURRENT_DIR/configs/base/ghostty/config" "$HOME/.config/ghostty/config"
 }
 
 configure_login_shell()

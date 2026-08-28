@@ -1,0 +1,11 @@
+theme = Gruvbox Dark
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+macos-auto-secure-input = false
+
+macos-titlebar-proxy-icon = hidden
+
+# Transparency
+background-opacity = 0.9
+background-blur-radius = 30

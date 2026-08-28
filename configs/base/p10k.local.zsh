@@ -5,7 +5,7 @@
 
 	 typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
-    os_icon                 # os identifier
+    #os_icon                 # os identifier
     dir                     # current directory
     vcs                     # git status
     kubecontext             # current kubernetes context (https://kubernetes.io/)
