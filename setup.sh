@@ -112,7 +112,12 @@ install_system_tools()
 				maccy \
 				raycast \
 				dockdoor \
-				scroll-reverser
+				linearmouse \
+				keyclu \
+				xykong/tap/flux-markdown \
+				shottr \
+				bash \
+				ca-certificates
 			;;
 	esac
 }
@@ -234,6 +239,7 @@ symlink_configs()
 	ENV="$(cat "$ENV_FILE")"
 	ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 
+	#TODO: check macOS default config paths and update the script accordingly
 	mkdir -p "$HOME/.config/k9s" "$HOME/.config/micro" "$HOME/.kube/my_configs" "$HOME/.config/ghostty"
 	rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
 	ln -sf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
@@ -271,6 +277,12 @@ install_powerlevel10k
 install_tmux_kube_context
 symlink_configs
 configure_login_shell
+
+info "Installing krew plugins"
+krew install --manifest-url=https://raw.githubusercontent.com/stelucz/kubectl-b64edit/main/.krew.yaml
+krew install \
+	node-shell \
+	rook-ceph
 
 echo
 info "Done. Install the JetBrains Mono Nerd Font from https://www.nerdfonts.com/font-downloads."
