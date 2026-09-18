@@ -42,6 +42,9 @@ defaults write com.apple.HIToolbox AppleDefaultAsciiInputSource -dict InputSourc
 # Set ABC as the current keyboard layout.
 defaults write com.apple.HIToolbox AppleCurrentKeyboardLayoutInputSourceID -string 'com.apple.keylayout.ABC'
 
+# remap "§±" to "`"
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc": 0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}'
+
 # Set maximum key repeat, turn the keyboard backlight off after 10 seconds, and disable Mission Control and Spotlight shortcuts.
 # Set the keyboard repeat rate to macOS's maximum value.
 defaults write -g KeyRepeat -int 2
