@@ -93,6 +93,7 @@ alias gp="git push"
 alias gdf="git diff"
 
 export "MICRO_TRUECOLOR=1"
+export K9S_CONFIG_DIR="$HOME/.config/k9s"
 
 awsp() {
   local profile
