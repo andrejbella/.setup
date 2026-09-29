@@ -117,7 +117,9 @@ install_system_tools()
 				xykong/tap/flux-markdown \
 				shottr \
 				bash \
-				ca-certificates
+				ca-certificates \
+				slack \
+				podman
 			;;
 	esac
 }
