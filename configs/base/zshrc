@@ -12,6 +12,14 @@ else
   export ENV="personal"
 fi
 
+if [[ $(uname -s) == "Darwin" ]]; then
+	OS="macos"
+  if [[ "$OS" == "macos" ]]; then
+	  # remap "§±" to "`"
+    hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc": 0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}' >/dev/null 2>&1
+  fi
+fi
+
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
