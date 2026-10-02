@@ -17,3 +17,17 @@ plugins:
       - $NAMESPACE
       - --context
       - $CONTEXT
+  b64edit:
+    shortCut: Shift-E
+    confirm: false
+    description: Edit (base64 decoded)
+    scopes:
+      - secrets
+      - configmaps
+      - all
+    dangerous: true
+    background: false
+    command: sh
+    args:
+      - -c
+      - kubectl-b64edit --context "$CONTEXT" --namespace "$NAMESPACE" "$RESOURCE_NAME${RESOURCE_GROUP:+.$RESOURCE_GROUP}" "$NAME"
