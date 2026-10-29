@@ -1,2 +1,3 @@
 themes/
 .setup_env
+config/base/openlogi/config.toml.lock

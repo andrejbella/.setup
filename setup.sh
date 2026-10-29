@@ -110,16 +110,16 @@ install_system_tools()
 				inetutils \
 				ghostty \
 				maccy \
-				raycast \
-				dockdoor \
-				linearmouse \
+				openlogi \
 				keyclu \
 				xykong/tap/flux-markdown \
 				shottr \
 				bash \
 				ca-certificates \
 				slack \
-				podman
+				podman \
+				virtctl \
+				tiger-vnc
 			;;
 	esac
 }
@@ -190,6 +190,8 @@ install_mise_tools()
 		talosctl \
 		fzf \
 		k9s \
+		cilium-cli \
+		cilium-hubble \
 		opentofu \
 		flux2 \
 		clusterawsadm \
@@ -204,7 +206,6 @@ install_mise_tools()
 		fd \
 		ripgrep \
 		azure-cli \
-		krew \
 		zoxide \
 		jq \
 		jwt \
@@ -242,10 +243,11 @@ symlink_configs()
 	ENV_CONFIG_DIR="$CURRENT_DIR/configs/$ENV"
 
 	#TODO: check macOS default config paths and update the script accordingly
-	mkdir -p "$HOME/.config/k9s" "$HOME/.config/micro" "$HOME/.kube/my_configs" "$HOME/.config/ghostty"
+	mkdir -p "$HOME/.config/k9s" "$HOME/.config/micro" "$HOME/.kube/my_configs" "$HOME/.config/ghostty" "$HOME/.config/openlogi"
 	rm -f "$HOME/.zshrc" "$HOME/.gitconfig"
 	ln -sf "$CURRENT_DIR/configs/base/zshrc" "$HOME/.zshrc"
-	ln -sf "$ENV_CONFIG_DIR/gitconfig" "$HOME/.gitconfig"
+	ln -sf "$CURRENT_DIR/configs/base/gitconfig" "$HOME/.gitconfig"
+	ln -sf "$ENV_CONFIG_DIR/gitconfig-profile" "$HOME/.gitconfig-profile"
 	ln -sf "$CURRENT_DIR/configs/base/k9s/config.yaml" "$HOME/.config/k9s/config.yaml"
 	ln -sf "$CURRENT_DIR/configs/base/tmux.conf" "$HOME/.tmux.conf"
 	ln -sf "$CURRENT_DIR/configs/base/k9s/plugins.yaml" "$HOME/.config/k9s/plugins.yaml"
@@ -254,6 +256,7 @@ symlink_configs()
 	ln -sfn "$CURRENT_DIR/skins/k9s" "$HOME/.config/k9s/skins"
 	ln -sfn "$CURRENT_DIR/skins/micro" "$HOME/.config/micro/colorschemes"
 	ln -sf "$CURRENT_DIR/configs/base/ghostty/config" "$HOME/.config/ghostty/config"
+	ln -sf "$CURRENT_DIR/configs/base/openlogi/config.toml" "$HOME/.config/openlogi/config.toml"
 }
 
 configure_login_shell()
@@ -280,9 +283,18 @@ install_tmux_kube_context
 symlink_configs
 configure_login_shell
 
-info "Installing krew plugins"
-krew install --manifest-url=https://raw.githubusercontent.com/stelucz/kubectl-b64edit/main/.krew.yaml
-krew install \
+info "Installing krew and plugins"
+(
+  set -x; cd "$(mktemp -d)" &&
+  OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+  ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+  KREW="krew-${OS}_${ARCH}" &&
+  curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+  tar zxvf "${KREW}.tar.gz" &&
+  ./"${KREW}" install krew
+)
+kubectl krew install --manifest-url=https://raw.githubusercontent.com/stelucz/kubectl-b64edit/main/.krew.yaml
+kubectl krew install \
 	node-shell \
 	rook-ceph
 

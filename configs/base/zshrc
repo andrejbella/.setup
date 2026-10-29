@@ -162,6 +162,9 @@ source <(kubectl completion zsh)
 source <(kubecolor completion zsh)
 source <(flux completion zsh)
 source <(clusterctl completion zsh)
+source <(cilium completion zsh)
+source <(hubble completion zsh)
+source <(virtctl completion zsh)
 
 # AWS CLI completion (bash completion loaded via bashcompinit)
 if command -v aws_completer >/dev/null 2>&1; then

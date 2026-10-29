@@ -31,3 +31,16 @@ plugins:
     args:
       - -c
       - kubectl-b64edit --context "$CONTEXT" --namespace "$NAMESPACE" "$RESOURCE_NAME${RESOURCE_GROUP:+.$RESOURCE_GROUP}" "$NAME"
+  node-shell:
+    shortCut: Ctrl-N
+    description: "Open a root shell on a node using the node-shell plugin"
+    scopes:
+      - nodes
+    command: kubectl
+    args:
+      - node-shell
+      - $NAME
+      - --context
+      - $CONTEXT
+    background: false
+    confirm: false    
