@@ -201,11 +201,10 @@ install_mise_tools()
 		stern \
 		sops \
 		trufflehog \
-		kcl \
+		kcl@0.12.10 \
 		task \
 		fd \
 		ripgrep \
-		azure-cli \
 		zoxide \
 		jq \
 		jwt \
