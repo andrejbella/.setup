@@ -1,22 +1,139 @@
 plugins:
-  # Leverage stern (https://github.com/stern/stern) to output logs.
-  stern:
-    shortCut: Ctrl-Y
-    confirm: false
-    description: "Logs <Stern>"
-    scopes:
-      - pods
-      - deployments
-    command: stern
-    background: false
-    args:
-      - --tail
-      - 50
-      - $FILTER
-      - -n
-      - $NAMESPACE
-      - --context
-      - $CONTEXT
+stern:
+  shortCut: Ctrl-Y
+  confirm: false
+  description: "Stern logs: fzf live search"
+  scopes:
+    - pods
+    - deployments
+  command: sh
+  background: false
+  args:
+    - -c
+    - |
+      set -u
+
+      selected="$1"
+      namespace="$2"
+      context="$3"
+
+      set -- $(kubectl --context "$context" -n "$namespace" get pod "$selected" \
+        -o jsonpath='{.kind} {.metadata.ownerReferences[0].kind} {.metadata.ownerReferences[0].name}' 2>/dev/null || true)
+
+      case "${2:-}" in
+        ReplicaSet)  query="^${3%-*}-[a-z0-9]+-[a-z0-9]+$" ;;
+        StatefulSet) query="^$3-[0-9]+$" ;;
+        DaemonSet|Job) query="^$3-[a-z0-9]+$" ;;
+        *)
+          if [ -n "${1:-}" ]; then
+            query="^${selected}$"
+          else
+            query="^${selected}-[a-z0-9]+-[a-z0-9]+$"
+          fi
+          ;;
+      esac
+
+      tmpdir="$(mktemp -d)"
+      pause_file="$tmpdir/paused"
+      pid_file="$tmpdir/stern.pid"
+      stop_file="$tmpdir/stop"
+
+      cleanup() {
+        touch "$stop_file"
+        if [ -f "$pid_file" ]; then
+          p="$(cat "$pid_file")"
+          kill -CONT "$p" 2>/dev/null || true
+          kill -TERM "$p" 2>/dev/null || true
+        fi
+        rm -rf "$tmpdir"
+      }
+
+      trap cleanup EXIT HUP INT TERM
+
+      echo "query=$query selected=$selected ns=$namespace ctx=$context" >> /tmp/stern-debug.log
+
+      preview_cmd='
+        m=$(printf "%s" {5} | base64 -D)
+        printf "%s" "$m" | jq -C . 2>/dev/null ||
+        printf "%s\n" "$m" | jq -Rr '\''
+          if test("ERROR|FATAL|PANIC"; "i") then
+            "\u001b[31m" + . + "\u001b[0m"
+          elif test("WARN|WARNING"; "i") then
+            "\u001b[33m" + . + "\u001b[0m"
+          elif test("DEBUG|TRACE"; "i") then
+            "\u001b[90m" + . + "\u001b[0m"
+          else
+            "\u001b[37m" + . + "\u001b[0m"
+          end
+        '\''
+      '
+
+      run_stern() {
+        tail=200000
+        while [ ! -f "$stop_file" ]; do
+          stern --output json --timestamps --tail "$tail" "$query" \
+            -n "$namespace" --context "$context" \
+            2>>/tmp/stern-debug.log &
+          p=$!
+          echo "$p" > "$pid_file"
+          wait "$p" || true
+          rm -f "$pid_file"
+          [ -f "$stop_file" ] && break
+          tail=0
+          sleep 1
+        done
+      }
+
+      run_stern |
+      jq --unbuffered -r '
+        def color($m):
+          (($m | fromjson? // null)
+            | if type == "object" then
+                (.level // .severity // "") | tostring
+              else ""
+              end) as $l
+          | (if $l != "" then $l else $m end) as $s
+          | if $s | test("error|fatal|panic"; "i") then "\u001b[31m"
+            elif $s | test("warn"; "i") then "\u001b[33m"
+            elif $s | test("debug|trace"; "i") then "\u001b[90m"
+            else "\u001b[37m" end;
+
+        def c($code; $s): "\u001b[\($code)m\($s)\u001b[0m";
+
+        (.message // "") as $m |
+        [
+          c(36; .namespace),
+          c(34; .podName),
+          c(35; .containerName),
+          color($m) + ($m | gsub("[\r\n\t]"; " ")) + "\u001b[0m",
+          ($m | @base64)
+        ] | join("\t")
+      ' |
+      fzf \
+        --ansi \
+        --delimiter='\t' \
+        --with-nth=1..4 \
+        --tac \
+        --no-sort \
+        --tail=20000 \
+        --exact \
+        --prompt='live logs> ' \
+        --header='Alt-S Pause/Resume │ Enter Open │ Esc Exit' \
+        --preview="$preview_cmd" \
+        --preview-window='right:30%:wrap' \
+        --bind="alt-s:execute-silent(p=\$(cat '$pid_file'); if [ -f '$pause_file' ]; then kill -CONT \$p && rm -f '$pause_file'; else kill -STOP \$p && touch '$pause_file'; fi)" \
+        --bind="esc:execute-silent(touch '$stop_file'; if [ -f '$pid_file' ]; then p=\$(cat '$pid_file'); kill -CONT \$p 2>/dev/null; kill -TERM \$p 2>/dev/null; fi)+abort" \
+        --bind="enter:execute(printf '%s' {5} | base64 -D | jq -Rr 'fromjson? // .' | micro)"
+
+      rc=$?
+      [ "$rc" -eq 130 ] && exit 0
+      exit "$rc"
+
+    - stern
+    - $NAME
+    - $NAMESPACE
+    - $CONTEXT
+
   b64edit:
     shortCut: Shift-E
     confirm: false
@@ -43,4 +160,4 @@ plugins:
       - --context
       - $CONTEXT
     background: false
-    confirm: false    
+    confirm: false
