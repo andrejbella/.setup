@@ -6,6 +6,8 @@ macos-auto-secure-input = false
 
 macos-titlebar-proxy-icon = hidden
 
+macos-option-as-alt = true
+
 # Transparency
 background-opacity = 0.9
 background-blur-radius = 30
